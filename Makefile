@@ -28,6 +28,7 @@
 BIN	= /usr/local/bin
 OCT 	= $(BIN)/octave --eval
 SHELL 	:= $(BIN)/bash
+AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
 array 	= normal
 function = 6
 
@@ -42,11 +43,6 @@ imgdir	= img
 csv 	= $(wildcard ../decoders/*.csv)
 mat 	= $(wildcard ../decoders/*.mat)
 png 	= $(wildcard ../decoders/*.png)
-
-## Install dirs
-vst	= /Users/henrik_frisk/Library/Audio/Plug-Ins/VST/ADT
-
-#stuff 	= $(find ../decoders -maxdepth 1 -type f -regex ".*\.csv" -or -regex ".*mat")
 
 run_orders = run_orders
 run_dec	= run_dec_KMH
@@ -216,6 +212,8 @@ simplify_name_ls :
 	@echo $(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(basename $(trimls)))";/' $(var) && mv "$(var)" $(trimls))) 
 	rm -f $(lsdata)/$(srcdir)/*.dsp.bu
 
+install_ambix_108 :
+	@install -d $(108data)/$(ambixdir)/*.config $(AMBIX_INSTALL)/kmh_108
 ###################################################################
 ## Unused
 cleanup_108 :

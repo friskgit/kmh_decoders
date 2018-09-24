@@ -10,7 +10,7 @@ end
 
 switch lower(c)
 case 'full'
-val.name = 'KMHLS_AE_Full_setup';
+val.name = 'KMHLS_FullSetup';
 % "full configuration with floor speakers."
 % "azimuth(deg) elevation(deg) distance(metres)"
 S = [
