@@ -19,13 +19,16 @@
 # # 23 September 2018	Henrik Frisk	mail@henrikfrisk.com
 
 subdirs := $(wildcard ./KMH*)
+target_makefile	:= ../../kmh_decoders/Makefile.faust
 target 	:= all
 
-.PHONY : all $(subdirs)
+.PHONY : all $(subdirs) update_makefile
 
 all : $(subdirs)
 
 $(subdirs) :
-	$(MAKE) -C $@ all
+	@echo "Installing sc files for $@..."
+	$(MAKE) -C $@ scinstall
 
-
+update_makefile : $(target_makefile)
+	$(foreach var, $(subdirs), $(shell cp "$<" "$(var)/Makefile")) 

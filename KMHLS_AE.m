@@ -109,7 +109,7 @@ val.id = {
 };
 
 case 'normal'
-val.name = 'KMHLS_Klangkupolen';
+val.name = 'KMHLS_Dome';
 % Normal configuration
 % azimuth(deg) elevation(deg) distance(metres)
   S = [
@@ -176,7 +176,7 @@ val.id = {
 };
 
 case 'single_ring'
-val.name = 'KMHLS_one_ring';
+val.name = 'KMHLS_Ring';
 S = [
      29.901388      13.183227   5.130097    
        7.465974       13.164119   5.137412   

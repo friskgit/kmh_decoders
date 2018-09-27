@@ -183,19 +183,22 @@ dirs :
 .PHONY : install_make_108 install_make_114 install_make_ls cleanup_108 cleanup_114 cleanup_ls simplify_name_108 simplify_name_114 simplify_name_ls test
 
 install_make_108 :
-	@cp ~/Music/faust/faust_stuff.git/Makefile.faust $(108data)/Makefile
+	@install Makefile.faust $(108data)/Makefile 
+	$(shell if [ ! -a "$(108data)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
 
 install_make_114 :
-	@cp ~/Music/faust/faust_stuff.git/Makefile.faust $(114data)/Makefile
+	@install Makefile.faust $(114data)/Makefile
+	$(shell if [ ! -a "$(114data)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
 
 install_make_ls :
-	@cp ~/Music/faust/faust_stuff.git/Makefile.faust $(lsdata)/Makefile
+	@install Makefile.faust $(lsdata)/Makefile
+	$(shell if [ ! -a "$(lsdata)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
 
 simplify_name_108 :
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))
-	@echo $(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(basename $(trim108)))";/' $(var) && mv "$(var)" $(trim108))) 
+	@echo $(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(basename $(trim108)))";/' $(var) && mv "$(var)" $(trim108)))
 	rm -f $(108data)/$(srcdir)/*.dsp.bu
-
+ 
 ## Unused
 change_name_108 : 
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))	
@@ -214,6 +217,7 @@ simplify_name_ls :
 
 install_ambix_108 :
 	@install -d $(108data)/$(ambixdir)/*.config $(AMBIX_INSTALL)/kmh_108
+
 ###################################################################
 ## Unused
 cleanup_108 :

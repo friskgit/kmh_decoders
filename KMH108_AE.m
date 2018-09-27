@@ -23,7 +23,7 @@ S = [
 val.id = {'L', 'R', 'FSR', 'SR', 'RR', 'RL', 'SL', 'FSR',};
 
 case 'full'
-  val.name = 'KMH108_AE_C';
+  val.name = 'KMH108_AEC';
 % azimuth(deg) elevation(deg) distance(metres)
 S = [
      27.167559968   0.0           2.5	
