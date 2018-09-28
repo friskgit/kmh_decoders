@@ -105,7 +105,7 @@ LOCLS		:= KMHLS
 SC_INSTALL	:= ~/Library/Application\ Support/SuperCollider/Extensions/ADT
 VST_INSTALL	:= $(vstinstdir)
 MAX_INSTALL	:= ~/Documents/Max\ 7/Packages
-PD_INSTALL	:= $(pdinstdir)
+PD_INSTALL	:= $(pdinstall)
 AMBIX_INSTALL	:= $(ambixinstdir)
 MAX_HELP	:= help
 MAX_EXTERNALS	:= externals
@@ -258,13 +258,15 @@ pdinstall : $(PD)
 $(PD_INSTALL)/%~.pd_darwin : $(pd)
 	install "$<" "$@"
 
-vstinstall : $(VST)
+## The install target did not work as expected, hence this solution for  the VSTs.
+vstinstall : $(vst)
 	@echo ""
 	@echo "Installing VST plug-ins in $(VST_INSTALL)"
 	@echo ""
+	$(foreach var, $(vst), $(shell cp -R $(var) $(VST_INSTALL)))
 
-$(VST_INSTALL)/%.vst : $(vst)
-	@cp -r $< $@
+# $(VST_INSTALL)/%.vst : $(vst)
+# 	@cp -R $< $(dir $@)
 
 ambixinstall :
 	$(if $(ambix), $(if $(wildcard $(srcdir)/$(LOC108)*.dsp), install $(wildcard $(ambixdir)/*.config) $(AMBIX_INSTALL)/$(amb108))) \
