@@ -7,10 +7,14 @@
 
 ##   - case 1 % AllRAD, mixed order: 4,3
 ##   - case 2 % EvenEnergy
-##   - case 3 % Mode-Matching
+##		Crisp but less pressence
+##   - case 3 % Mode-Matching <NOT USABLE>
 ##   - case 4 % Energy limited 50%, 2 band, shelf filters, one matrix, HV
+## 		Smooth and good sounding, clear
 ##   - case 5 % Spherical Slepian, order set by caller, 'HV', 'ACN', 'SN3D'
+##		Not much difference
 ##   - case 6 % AllRAD ACN/N3D, HV
+##		Nice presence, slightly muffled
 ##   - case 7 % Test
 ##
 ## Set the version of the array to use with the parameter $(array):
@@ -29,8 +33,9 @@ BIN	= /usr/local/bin
 OCT 	= $(BIN)/octave --eval
 SHELL 	:= $(BIN)/bash
 AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
-array 	= normal
-function = 6
+MAKEFILE_FAUST 	:= ~/Music/faust/faust_stuff.git/Makefile.adt
+array 	= full
+function = 5
 
 bindir	= ../decoders
 108dir	= $(bindir)/KMH108
@@ -155,7 +160,7 @@ ls_norm :
 
 ## Make decoders in order 1, 3, 5.
 ls_norm_all : 
-	$(OCT) "$(run_orders)$(call_ls_orders)"
+	$(OCT) "$(run_orders)$(call_ls_orders)" 	
 
 ls_move : ls_dirs install_make_ls
 	@echo "Cleaning up directory..."
@@ -183,22 +188,22 @@ dirs :
 .PHONY : install_make_108 install_make_114 install_make_ls cleanup_108 cleanup_114 cleanup_ls simplify_name_108 simplify_name_114 simplify_name_ls test
 
 install_make_108 :
-	@install Makefile.faust $(108data)/Makefile 
+	@install $(MAKEFILE_FAUST) $(108data)/Makefile 
 	$(shell if [ ! -a "$(108data)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
 
 install_make_114 :
-	@install Makefile.faust $(114data)/Makefile
+	@install $(MAKEFILE_FAUST) $(114data)/Makefile
 	$(shell if [ ! -a "$(114data)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
 
 install_make_ls :
-	@install Makefile.faust $(lsdata)/Makefile
+	@install $(MAKEFILE_FAUST) $(lsdata)/Makefile
 	$(shell if [ ! -a "$(lsdata)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
 
 simplify_name_108 :
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))
 	@echo $(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(basename $(trim108)))";/' $(var) && mv "$(var)" $(trim108)))
 	rm -f $(108data)/$(srcdir)/*.dsp.bu
- 
+
 ## Unused
 change_name_108 : 
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))	

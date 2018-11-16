@@ -19,7 +19,7 @@
 # # 23 September 2018	Henrik Frisk	mail@henrikfrisk.com
 
 subdirs := $(wildcard ./KMH*)
-target_makefile	:= ../../kmh_decoders/Makefile.faust
+target_makefile	:=  ~/Music/faust/faust_stuff.git/Makefile.adt
 target 	:= all
 
 .PHONY : all $(subdirs) update_makefile
@@ -28,7 +28,7 @@ all : $(subdirs)
 
 $(subdirs) :
 	@echo "Installing sc files for $@..."
-	$(MAKE) -C $@ scinstall
+	$(MAKE) -C $@ $(target)
 
 update_makefile : $(target_makefile)
 	$(foreach var, $(subdirs), $(shell cp "$<" "$(var)/Makefile")) 
