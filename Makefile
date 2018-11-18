@@ -34,8 +34,8 @@ OCT 	= $(BIN)/octave --eval
 SHELL 	:= $(BIN)/bash
 AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
 MAKEFILE_FAUST 	:= ~/Music/faust/faust_stuff.git/Makefile.adt
-array 	= full
-function = 5
+array 	= normal
+function = 6
 
 bindir	= ../decoders
 108dir	= $(bindir)/KMH108
