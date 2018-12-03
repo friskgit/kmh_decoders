@@ -164,7 +164,8 @@ ls_norm_all :
 
 ls_move : ls_dirs install_make_ls
 	@echo "Cleaning up directory..."
-	@mv $(bindir)/KMHLS*.dsp $(lsdata)/$(srcdir)/
+##	$(foreach var, $(bindir)/KMHLS*.dsp, $(shell mv $(var) $(lsdata)/$(srcdir)))
+	@mv $(bindir)/KMHLS*.dsp $(lsdata)/$(srcdir)
 	@mv $(bindir)/KMHLS*.config $(lsdata)/$(ambixdir)/
 	$(eval ADEC = $(wildcard $(bindir)/*.ambdec))
 	$(if $(ADEC), @mv $(bindir)/*ambdec $(lsdata)/$(ambdecdir), )

@@ -89,7 +89,7 @@ function run_dec_KMH( order, location, array, funct )
                 PC, ...      % channel definition
                 imaginary_speaker, ...  % imaginary speaker at bottom of dome
                 [], ...        % default output
-                true, ...      % graphics
+                false, ...      % graphics
 		'HV',...       % mixed order method
                 1/2);
 
@@ -109,7 +109,7 @@ function run_dec_KMH( order, location, array, funct )
                 C, ...      % ambisonic order
                 imaginary_speaker, ...  % imaginary speaker at bottom of dome
                 [], ...         % default output
-                true);         % don't do graphics
+                false);         % don't do graphics
 					     
 	case 7 % Test
 	  printf("Test complete.\n");
