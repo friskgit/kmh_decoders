@@ -35,7 +35,7 @@ SHELL 	:= $(BIN)/bash
 AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
 MAKEFILE_FAUST 	:= ~/Music/faust/faust_stuff.git/Makefile.adt
 array 	= normal
-function = 6
+function = 2
 
 bindir	= ../decoders
 108dir	= $(bindir)/KMH108

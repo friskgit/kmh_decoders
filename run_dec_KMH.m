@@ -62,7 +62,7 @@ function run_dec_KMH( order, location, array, funct )
                 [], ...        % default output
                 false);         % graphics
             
-        case 2 % EvenEnergy
+        case 2 % EvenEnergy for inversion invariants
             ambi_run_pinv(...
                 S,...
                 C, ...      % channel definition
@@ -70,10 +70,10 @@ function run_dec_KMH( order, location, array, funct )
                 [], ...        % default output
                 false, ...      % graphics
 		'HV',...       % mixed order method
-                0);
+                1);
 
 	    % This coesn't work
-        case 3 % Mode-Matching
+        case 3 % Mode-Matching for inversion invariants
             ambi_run_pinv(...
                 S, ...
                 C, ...      % channel definition
@@ -83,10 +83,10 @@ function run_dec_KMH( order, location, array, funct )
 		'HV',...       % mixed order method
                 0);
             % Funkar upp till 6 ordningen
-        case 4 % Energy limited 50%
+        case 4 % Energy limited 50%, mode matching and even energy mixed
             ambi_run_pinv(...
                 S, ...
-                PC, ...      % channel definition
+                C, ...      % channel definition
                 imaginary_speaker, ...  % imaginary speaker at bottom of dome
                 [], ...        % default output
                 false, ...      % graphics
@@ -96,7 +96,7 @@ function run_dec_KMH( order, location, array, funct )
         case 5 % Spherical Slepian
             ambi_run_SSF(...
                 S, ...
-                [order,order], ...%[order,order], ...      % ambisonic order
+                C, ...%[order,order], ...      % ambisonic order
                 imaginary_speaker, ...  % imaginary speaker at bottom of dome
                 [], ...        % default output
                 false, ...     % graphics
