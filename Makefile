@@ -19,7 +19,14 @@
 ##
 ## Set the version of the array to use with the parameter $(array):
 ## `make 108 array=normal`
+##
+## For normal use:
+## `make -k all_ls function=6`
 ## 
+## To view a stored .ofig file run:
+## hgload plot.ofig
+## in octave.
+
 ## Copying and distribution of this file, with or without modification,
 ## are permitted in any medium without royalty provided the copyright
 ## notice and this notice are preserved.  This file is offered as-is,
@@ -35,7 +42,7 @@ SHELL 	:= $(BIN)/bash
 AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
 MAKEFILE_FAUST 	:= ~/Music/faust/faust_stuff.git/Makefile.adt
 array 	= normal
-function = 2
+function = 1
 
 bindir	= ../decoders
 108dir	= $(bindir)/KMH108
@@ -194,11 +201,11 @@ install_make_108 :
 
 install_make_114 :
 	@install $(MAKEFILE_FAUST) $(114data)/Makefile
-	$(shell if [ ! -a "$(114data)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
+	$(shell if [ ! -a "$(114data)/../Makefile" ] ; then install "Makefile.package" "$(114data)/../Makefile"; fi )
 
 install_make_ls :
 	@install $(MAKEFILE_FAUST) $(lsdata)/Makefile
-	$(shell if [ ! -a "$(lsdata)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
+	$(shell if [ ! -a "$(lsdata)/../Makefile" ] ; then install "Makefile.package" "$(lsdata)/../Makefile"; fi )
 
 simplify_name_108 :
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))
