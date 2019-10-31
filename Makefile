@@ -50,7 +50,7 @@ BIN	= /usr/local/bin
 OCT 	= $(BIN)/octave --eval
 SHELL 	:= $(BIN)/bash
 AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
-MAKEFILE_FAUST 	:= ~/Music/faust/faust_stuff.git/Makefile.adt
+MAKEFILE_FAUST 	:= Makefile.adt
 array 	= normal
 function = 1
 
