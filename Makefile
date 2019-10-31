@@ -32,6 +32,16 @@
 ## notice and this notice are preserved.  This file is offered as-is,
 ## without any warranty.
 
+## Cleanout route keyword from dsp:
+##
+## sed -E 's/(.+n_inputs,n_outputs,outs.+)/\/\/\1/; s/(.+par.i,n_outputs,.0,gate_bus.i,outs.+))/\/\/\1/; s/.+m.bus.n_outputs.+//' KMHLS_FullSetup_4h3v_full_1.dsp >out.dsp
+##
+## or:
+##
+## for i in *.dsp; do
+##      sed -E -i '' 's/(.+n_inputs,n_outputs,outs.+)/\/\/\1/; s/(.+par.i,n_outputs,.0,gate_bus.i,outs.+))/\/\/\1/; s/.+m.bus.n_outputs.+//' $i;
+## done
+
 ## Copyright Henrik Frisk 2018 (C)
 # ==========
 # Fre Jul 20 15:51:18 CEST 2018
@@ -176,8 +186,10 @@ ls_move : ls_dirs install_make_ls
 	@mv $(bindir)/KMHLS*.config $(lsdata)/$(ambixdir)/
 	$(eval ADEC = $(wildcard $(bindir)/*.ambdec))
 	$(if $(ADEC), @mv $(bindir)/*ambdec $(lsdata)/$(ambdecdir), )
-	@mv $(csv) $(lsdata)/$(imgdir)
-	@mv $(mat) $(lsdata)/$(imgdir)
+	$(eval CSV = $(wildcard $(imgdir)/*.csv))
+	$(if $(CSV), @mv $(csv) $(lsdata)/$(imgdir))
+	$(eval MAT = $(wildcard $(imgdir)/*.mat))
+	$(if $(MAT), @mv $(mat) $(lsdata)/$(imgdir))
 	$(eval TMP = $(wildcard $(bindir)/*.png))
 	$(if $(TMP), @mv $(png) $(lsdata)/$(imgdir), )
 
