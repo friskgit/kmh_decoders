@@ -46,10 +46,22 @@
 # ==========
 # Fre Jul 20 15:51:18 CEST 2018
 
-BIN	= /usr/local/bin
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Linux)
+	SYSTEM =+ Linux
+	BIN	= /usr/bin
+	AMBIX_INSTALL_LINUX := ~/ambix/binaural_presets/
+
+endif
+ifeq ($(UNAME), Darwin)
+	SYSTEM =+ OSX
+	BIN	= /usr/local/bin
+	AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
+endif
+
 OCT 	= $(BIN)/octave --eval
 SHELL 	:= $(BIN)/bash
-AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
 MAKEFILE_FAUST 	:= Makefile.adt
 array 	= normal
 function = 1
@@ -97,7 +109,10 @@ trimls = $(lsdata)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 2, 
 ## Add the path to the ADT matlab scripts
 path	= '/Users/henrik_frisk/Music/ambidecodertoolbox/matlab'
 
-.PHONY : 108 all_108 108_norm 108_norm_all 108_move 108_dirs
+.PHONY : 108 all_108 108_norm 108_norm_all 108_move 108_dirs test
+
+test :
+	@echo $(BIN)
 
 108 : 108_norm 108_move simplify_name_108
 
