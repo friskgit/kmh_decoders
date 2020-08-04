@@ -35,7 +35,8 @@ function run_dec_KMH( order, location, array, funct )
 
     %% Make sure that matlab scripts are loaded...
     if ~exist('ambi_run_pinv', 'file')
-        addpath(fullfile('../../', 'matlab'));
+        addpath('~/bin/adt');
+        adt_initialize;
         if ~exist('ambi_run_pinv', 'file')
             error('No MATLAB scripts...');
         end

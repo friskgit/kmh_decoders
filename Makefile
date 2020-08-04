@@ -66,7 +66,7 @@ MAKEFILE_FAUST 	:= Makefile.adt
 array 	= normal
 function = 1
 
-bindir	= ../decoders
+bindir	= ~/bin/adt/decoders
 108dir	= $(bindir)/KMH108
 114dir	= $(bindir)/KMH114
 lsdir	= $(bindir)/KMHLS
@@ -84,6 +84,10 @@ loc108 	= KMH108_AE
 loc114 	= KMH114_AE
 locls 	= KMHLS_AE
 order	= 1
+
+dir108 	= KMH108
+dir114 	= KMH114
+dirls 	= KMHLS
 
 108data = $(108dir)/$(loc108)_$(array)_$(function)
 114data = $(114dir)/$(loc114)_$(array)_$(function)
@@ -107,12 +111,14 @@ trim114 = $(114data)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 2
 trimls = $(lsdata)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 2, $(subst _, ,$(notdir $(var))))_$(word 3, $(subst _, ,$(notdir $(var))))_$(array)_$(function).dsp
 
 ## Add the path to the ADT matlab scripts
-path	= '/Users/henrik_frisk/Music/ambidecodertoolbox/matlab'
+path	= '/home/henrikfr/bin/adt'
 
 .PHONY : 108 all_108 108_norm 108_norm_all 108_move 108_dirs test
 
 test :
-	@echo $(BIN)
+	echo "$(csv)"
+	csv="hej"
+	echo $(csv)
 
 108 : 108_norm 108_move simplify_name_108
 
@@ -128,12 +134,14 @@ all_108 : 108_norm_all 108_move simplify_name_108
 
 108_move : 108_dirs install_make_108
 	@echo "Cleaning up directory..."
-	@mv $(bindir)/${loc108::3}*.dsp $(108data)/$(srcdir)/
-	@mv $(bindir)/${loc108::3}*.config $(108data)/$(ambixdir)/
+	@mv $(bindir)/${dir108}*.dsp $(108data)/$(srcdir)/
+	@mv $(bindir)/${dir108}*.config $(108data)/$(ambixdir)/
 	$(eval ADEC = $(wildcard $(bindir)/*.ambdec))
 	$(if $(ADEC), @mv $(bindir)/*ambdec $(108data)/$(ambdecdir), )
-	@mv $(csv) $(108data)/$(imgdir)
-	@mv $(mat) $(108data)/$(imgdir)
+	$(eval CSV = $(wildcard $(bindir)/*.csv))
+	$(if $(CSV), @mv $(bindir)/*.csv $(108data)/$(imgdir), )
+	$(eval MAT = $(wildcard $(bindir)/*.mat))
+	$(if $(MAT), @mv $(bindir)/*.mat $(108data)/$(imgdir), )
 	$(eval TMP = $(wildcard $(bindir)/*.png))
 	$(if $(TMP), @mv $(png) $(108data)/$(imgdir), )
 
@@ -162,8 +170,8 @@ all_114 : 114_norm_all 114_move simplify_name_114
 
 114_move : 114_dirs install_make_114
 	@echo "Cleaning up directory..."
-	@mv $(bindir)/${loc114::3}*.dsp $(114data)/$(srcdir)/
-	@mv $(bindir)/${loc114::3}*.config $(114data)/$(ambixdir)/
+	@mv $(bindir)/${dir114}*.dsp $(114data)/$(srcdir)/
+	@mv $(bindir)/${dir114}*.config $(114data)/$(ambixdir)/
 	$(eval ADEC = $(wildcard $(bindir)/*.ambdec))
 	$(if $(ADEC), @mv $(bindir)/*ambdec $(114data)/$(ambdecdir), )
 	@mv $(csv) $(114data)/$(imgdir)
@@ -224,7 +232,7 @@ dirs :
 
 install_make_108 :
 	@install $(MAKEFILE_FAUST) $(108data)/Makefile 
-	$(shell if [ ! -a "$(108data)/../Makefile" ] ; then install "Makefile.package" "$(108data)/../Makefile"; fi )
+	$(shell if [ ! -a "$(108dir)/Makefile" ] ; then install "Makefile.package" "$(108dir)/Makefile"; fi )
 
 install_make_114 :
 	@install $(MAKEFILE_FAUST) $(114data)/Makefile
@@ -236,23 +244,23 @@ install_make_ls :
 
 simplify_name_108 :
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))
-	@echo $(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(basename $(trim108)))";/' $(var) && mv "$(var)" $(trim108)))
+	@echo $(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(basename $(trim108)))";/' $(var) && mv "$(var)" $(trim108)))
 	rm -f $(108data)/$(srcdir)/*.dsp.bu
 
 ## Unused
 change_name_108 : 
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))	
-	$(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(var))"/' $(var)))
+	$(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(var))"/' $(var)))
 	rm -f $(108data)/$(srcdir)/*.dsp.bu
 
 simplify_name_114 :
 	$(eval dsp_files:=$(wildcard $(114data)/$(srcdir)/*.dsp))
-	@echo $(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(basename $(trim114)))";/' $(var) && mv "$(var)" $(trim114))) 
+	@echo $(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(basename $(trim114)))";/' $(var) && mv "$(var)" $(trim114))) 
 	rm -f $(114data)/$(srcdir)/*.dsp.bu
 
 simplify_name_ls :
 	$(eval dsp_files:=$(wildcard $(lsdata)/$(srcdir)/*.dsp))
-	@echo $(foreach var, $(dsp_files), $(shell sed -i .bu 's/^declare name.*/declare name "$(notdir $(basename $(trimls)))";/' $(var) && mv "$(var)" $(trimls))) 
+	@echo $(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(basename $(trimls)))";/' $(var) && mv "$(var)" $(trimls))) 
 	rm -f $(lsdata)/$(srcdir)/*.dsp.bu
 
 install_ambix_108 :
