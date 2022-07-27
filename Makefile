@@ -63,6 +63,7 @@ endif
 OCT 	= $(BIN)/octave --eval
 SHELL 	:= $(BIN)/bash
 MAKEFILE_FAUST 	:= Makefile.adt
+MAKEFILE_PACKAGE	:= Makefile.package
 array 	= normal
 function = 1
 
@@ -116,9 +117,8 @@ path	= '/home/henrikfr/bin/adt'
 .PHONY : 108 all_108 108_norm 108_norm_all 108_move 108_dirs test
 
 test :
-	echo "$(csv)"
-	csv="hej"
-	echo $(csv)
+	echo $(call_108_orders)
+#	$(shell if [ ! -a "$(108dir)/Makefile" ] ; then install $(MAKEFILE_PACKAGE) $(108dir)/Makefile; fi )
 
 108 : 108_norm 108_move simplify_name_108
 
@@ -232,15 +232,15 @@ dirs :
 
 install_make_108 :
 	@install $(MAKEFILE_FAUST) $(108data)/Makefile 
-	$(shell if [ ! -a "$(108dir)/Makefile" ] ; then install "Makefile.package" "$(108dir)/Makefile"; fi )
+	$(shell if [ ! -a "$(108dir)/Makefile" ] ; then install $(MAKEFILE_PACKAGE) $(108dir)/Makefile; fi )
 
 install_make_114 :
 	@install $(MAKEFILE_FAUST) $(114data)/Makefile
-	$(shell if [ ! -a "$(114data)/../Makefile" ] ; then install "Makefile.package" "$(114data)/../Makefile"; fi )
+	$(shell if [ ! -a "$(114data)/../Makefile" ] ; then install $(MAKEFILE_PACKAGE) $(114dir)/Makefile; fi )
 
 install_make_ls :
 	@install $(MAKEFILE_FAUST) $(lsdata)/Makefile
-	$(shell if [ ! -a "$(lsdata)/../Makefile" ] ; then install "Makefile.package" "$(lsdata)/../Makefile"; fi )
+	$(shell if [ ! -a "$(lsdata)/../Makefile" ] ; then install $(MAKEFILE_PACKAGE) $(lsdata)/../Makefile; fi )
 
 simplify_name_108 :
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))
