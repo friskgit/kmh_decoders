@@ -1,5 +1,5 @@
 function run_dec_KMH( order, location, array, funct )
-  %% Call like this: run_dec_KMH(1, "KMH108_AE", "full", 9)
+  %% Call like this: run_dec_KMH(1, "KMH108", "full", 9)
   %% The location argument points to the room in KMH for which
   %% to calculate a decoder matrix.
   %% The array argument points to the particular variation of the speaker array.
@@ -10,10 +10,10 @@ function run_dec_KMH( order, location, array, funct )
     end
     
     %% loc is the current location for which to generate the decoder
-    %% defaults to KMH108_AE()
+    %% defaults to KMH108()
     if ~exist('location', 'var') || isempty(location)
-      loc = KMH108_AE();
-      location = "KMH108_AE()";
+      loc = KMH108();
+      location = "KMH108()";
     else
       loc = str2func(location)
     endif
@@ -44,9 +44,9 @@ function run_dec_KMH( order, location, array, funct )
     
     %% set the channel definitions.
     %% Use ACN channel order and SN3D normalization as a default
-    C = ambi_channel_definitions(order, order, 'HP', 'ACN', 'SN3D');  %
-    MC = ambi_channel_definitions(4, 3, 'HV', 'ACN', 'SN3D');  %
-    PC = ambi_channel_definitions(5, 3, 'HV', 'ACN', 'SN3D');  %
+    C = ambi_channel_definitions(order, order, 'HP', 'ACN', 'SN3D');
+    MC = ambi_channel_definitions(4, 3, 'HV', 'ACN', 'SN3D');
+    PC = ambi_channel_definitions(5, 3, 'HV', 'ACN', 'SN3D');
     
     %% load the speaker array.
     S = loc(array);

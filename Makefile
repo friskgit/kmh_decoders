@@ -56,18 +56,25 @@ ifeq ($(UNAME), Linux)
 endif
 ifeq ($(UNAME), Darwin)
 	SYSTEM =+ OSX
-	BIN	= /usr/local/bin
+	BIN	= /bin
 	AMBIX_INSTALL	:= ~/Library/ambix/binaural_presets
 endif
 
-OCT 	= $(BIN)/octave --eval
+OCT 	= /opt/homebrew/$(BIN)/octave --eval
 SHELL 	:= $(BIN)/bash
 MAKEFILE_FAUST 	:= Makefile.adt
 MAKEFILE_PACKAGE	:= Makefile.package
 array 	= normal
+ifeq ($(array), full)
+	array_t = F
+else ifeq ($(array), normal)
+	array_t = N
+endif
+
 function = 1
 
 bindir	= ~/bin/adt/decoders
+instdir	= ~/Dropbox/Music/spatialization/klangkupolen/decoders
 108dir	= $(bindir)/KMH108
 114dir	= $(bindir)/KMH114
 lsdir	= $(bindir)/KMHLS
@@ -78,21 +85,25 @@ imgdir	= img
 csv 	= $(wildcard ../decoders/*.csv)
 mat 	= $(wildcard ../decoders/*.mat)
 png 	= $(wildcard ../decoders/*.png)
+# dsp_files = $(wildcard $(bindir)/KMHLS*.dsp)
+dsp_files = $(wildcard $(bindir)/KMHLS*)
 
 run_orders = run_orders
 run_dec	= run_dec_KMH
-loc108 	= KMH108_AE
-loc114 	= KMH114_AE
-locls 	= KMHLS_AE
+loc108 	= KMH108
+loc114 	= KMH114
+locls 	= KMHLS
 order	= 1
 
 dir108 	= KMH108
 dir114 	= KMH114
 dirls 	= KMHLS
 
-108data = $(108dir)/$(loc108)_$(array)_$(function)
-114data = $(114dir)/$(loc114)_$(array)_$(function)
-lsdata = $(lsdir)/$(locls)_$(array)_$(function)
+functions = AllRad_Mixed PINV_EE PINV_MM PINV_EE50 SSF AllRad
+
+108data = $(108dir)/$(loc108)_$(word $(function), $(functions))
+114data = $(114dir)/$(loc114)_$(word $(function), $(functions))
+lsdata = $(lsdir)/$(locls)_$(word $(function), $(functions))
 
 open_par	= (
 close_par	= )
@@ -105,11 +116,29 @@ call_108_orders := $(open_par)'$(loc108)', '$(array)', $(function)$(close_par)
 call_114_orders := $(open_par)'$(loc114)', '$(array)', $(function)$(close_par)
 call_ls_orders := $(open_par)'$(locls)', '$(array)', $(function)$(close_par)
 
-trim108 = $(108data)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 2, $(subst _, ,$(notdir $(var))))_$(word 3, $(subst _, ,$(notdir $(var))))_$(array)_$(function).dsp
+# Create the file names from the output of the MatLab script according to the followig scheme:
+
+# File name: KMH108_AE_4h3v_allrad_5200_rE_max_2_band.dsp
+# Get (word 1) = KMH108 (subst _ with space, notdir(var): get the filename)
+# Get (word 2) = AE
+# Get (word 3) = 4h3v
+# Append (array) = normal
+# Append (function) = 1
+trim108o = $(108data)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 2, $(subst _, ,$(notdir $(var))))_$(word 3, $(subst _, ,$(notdir $(var))))_$(array)_$(function).dsp
 
 trim114 = $(114data)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 2, $(subst _, ,$(notdir $(var))))_$(word 3, $(subst _, ,$(notdir $(var))))_$(array)_$(function).dsp
 
 trimls = $(lsdata)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 2, $(subst _, ,$(notdir $(var))))_$(word 3, $(subst _, ,$(notdir $(var))))_$(array)_$(function).dsp
+
+# Update 2023
+# Get (word 1) = KMH108 (subst _ with space, notdir(var): get the filename)
+# Get (word 3) = 4h3v
+# Get (word 4) = allrad
+# Append (array_t) = N
+trim108 = $(108data)/$(srcdir)/$(word 1, $(subst _, ,$(notdir $(var))))_$(word 3, $(subst _, ,$(notdir $(var))))_$(word 4, $(subst _, ,$(notdir $(var))))_$(array_t).dsp
+
+
+
 
 ## Add the path to the ADT matlab scripts
 path	= '/home/henrikfr/bin/adt'
@@ -117,7 +146,7 @@ path	= '/home/henrikfr/bin/adt'
 .PHONY : 108 all_108 108_norm 108_norm_all 108_move 108_dirs test
 
 test :
-	echo $(call_108_orders)
+	echo $(array_t)
 #	$(shell if [ ! -a "$(108dir)/Makefile" ] ; then install $(MAKEFILE_PACKAGE) $(108dir)/Makefile; fi )
 
 108 : 108_norm 108_move simplify_name_108
@@ -188,7 +217,7 @@ all_114 : 114_norm_all 114_move simplify_name_114
 	   mkdir -p $(114data)/$(imgdir); \
 	fi
 
-.PHONY : ls all_ls ls_norm ls_norm_all ls_move ls_dirs
+.PHONY : ls all_ls ls_norm ls_norm_all ls_move ls_dirs ls_test
 
 ls : ls_norm ls_move simplify_name_ls
 
@@ -202,9 +231,14 @@ ls_norm :
 ls_norm_all : 
 	$(OCT) "$(run_orders)$(call_ls_orders)" 	
 
+ls_test :
+	# $(foreach, var, $(dsp_files), $(shell echo $(var)))
+	@echo $(bindir)/KMHLS*.dsp
+	@echo $(lsdata)/$(srcdir)
+
 ls_move : ls_dirs install_make_ls
 	@echo "Cleaning up directory..."
-##	$(foreach var, $(bindir)/KMHLS*.dsp, $(shell mv $(var) $(lsdata)/$(srcdir)))
+#	$(foreach var, $(bindir)/KMHLS*.dsp, $(shell echo $(var) $(lsdata)/$(srcdir)))
 	@mv $(bindir)/KMHLS*.dsp $(lsdata)/$(srcdir)
 	@mv $(bindir)/KMHLS*.config $(lsdata)/$(ambixdir)/
 	$(eval ADEC = $(wildcard $(bindir)/*.ambdec))
@@ -245,13 +279,7 @@ install_make_ls :
 simplify_name_108 :
 	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))
 	@echo $(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(basename $(trim108)))";/' $(var) && mv "$(var)" $(trim108)))
-	rm -f $(108data)/$(srcdir)/*.dsp.bu
-
-## Unused
-change_name_108 : 
-	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))	
-	$(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(var))"/' $(var)))
-	rm -f $(108data)/$(srcdir)/*.dsp.bu
+	# rm -f $(108data)/$(srcdir)/*.dsp.bu
 
 simplify_name_114 :
 	$(eval dsp_files:=$(wildcard $(114data)/$(srcdir)/*.dsp))
@@ -261,7 +289,13 @@ simplify_name_114 :
 simplify_name_ls :
 	$(eval dsp_files:=$(wildcard $(lsdata)/$(srcdir)/*.dsp))
 	@echo $(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(basename $(trimls)))";/' $(var) && mv "$(var)" $(trimls))) 
-	rm -f $(lsdata)/$(srcdir)/*.dsp.bu
+	 rm -f $(lsdata)/$(srcdir)/*.dsp.bu
+
+## Unused
+change_name_108 : 
+	$(eval dsp_files:=$(wildcard $(108data)/$(srcdir)/*.dsp))	
+	$(foreach var, $(dsp_files), $(shell sed -i.bu 's/^declare name.*/declare name "$(notdir $(var))"/' $(var)))
+	rm -f $(108data)/$(srcdir)/*.dsp.bu
 
 install_ambix_108 :
 	@install -d $(108data)/$(ambixdir)/*.config $(AMBIX_INSTALL)/kmh_108

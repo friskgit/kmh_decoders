@@ -47,11 +47,14 @@ ifeq ($(UNAME), Darwin)
 	SYSTEM =+ OSX
 	SUPERNOVA_EXT = scx
 	SC_INSTALL := ~/Library/Application\ Support/SuperCollider/Extensions/ADT
+	BREW := /opt/homebrew/bin/
+	SC_HEADERS := ~/bin/supercollider/include/
 endif
 
 ## Specify the sources to build here
 srcdir	:= src
 src	:= $(wildcard $(addsuffix /*.dsp, $(srcdir)))
+faust_install := /Users/henrik_frisk/bin/Faust-2.58.11/bin
 
 ## Output directories, dipsosable
 bindir	:= bin
@@ -102,18 +105,18 @@ FX		:= -effect
 NO_PATCH	:= -nppatch
 
 # Any of the above except OSC and HTTPD
-PANDOC		:= pandoc
+PANDOC		:= $(BREW)/pandoc
 MAX_FLAGS	:= $(POLY)
-FAUST2SVG	:= faust2svg #faust2firefox
-FAUST2VST	:= faust2vst
-FAUST2PD	:= faust2puredata
-FAUST2CAQT	:= faust2caqt
-FAUST2JACK	:= faust2jack
-FAUST2MAX	:= faust2max6
-FAUST2SC	:= faust2supercollider -sn -ks -noprefix
+FAUST2SVG	:= $(faust_install)/faust2svg #faust2firefox
+FAUST2VST	:= $(faust_install)/faust2vst
+FAUST2PD	:= $(faust_install)/faust2puredata
+FAUST2CAQT	:= $(faust_install)/faust2caqt
+FAUST2JACK	:= $(faust_install)/faust2jack
+FAUST2MAX	:= $(faust_install)/faust2max6
+FAUST2SC	:= $(faust_install)/faust2supercollider -sn -ks -noprefix
 FAUST2OCT 	:= $(HOME)/bin/f2o
 FAUST2OCTV 	:= faust2octave
-FAUST2MDOC	:= f2mdoc
+FAUST2MDOC	:= $(faust_install)/f2mdoc
 
 ## Create the relevant directories for compiling and installing.
 REQUIRED_DIRS	= $(bindir) $(docdir) $(cppdir) $(scdir) $(maxdir) $(vstdir) $(pddir) $(pdinstdir) $(vstinstdir) $(ambixinstdir)/$(amb108) $(ambixinstdir)/$(amb114) $(ambixinstdir)/$(ambls)
@@ -222,9 +225,7 @@ $(docdir)/%-svg : $(srcdir)/%.dsp
 	@rm -rf $(<:.dsp=-svg)
 
 $(scdir)/%.sc : $(srcdir)/%.dsp
-ifeq ($(SYSTEM), OSX)
-	export SUPERCOLLIDER_HEADERS=~/bin/supercollider/include/;
-endif
+	export SUPERCOLLIDER_HEADERS=$(SC_HEADERS);\
 	$(FAUST2SC) $<
 	@mv $(basename $<).sc $@
 	@mv $(basename $<).$(SUPERNOVA_EXT) $(scdir)
